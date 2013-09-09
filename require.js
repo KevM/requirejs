@@ -10,6 +10,32 @@
 
 var requirejs, require, define;
 (function (global) {
+  function ConsoleWrapper(window) {
+    this.console = window.console;
+    this.errors = [];
+    var self = this;
+    window.onerror = function() {
+      self.errors.push({ type: "on error", args: Array.prototype.slice.call(arguments) });
+    };
+  }
+  ConsoleWrapper.prototype.clear = function() {
+    this.errors = [];
+  };
+  ConsoleWrapper.prototype.error = function() {
+    this.errors.push({ type: "error", args: Array.prototype.slice.call(arguments) });
+    return this.console.error.apply(this.console, arguments);
+  };
+  ConsoleWrapper.prototype.log = function() {
+    return this.console.log.apply(this.console, arguments);
+  };
+  ConsoleWrapper.prototype.info = function() {
+    return this.console.info.apply(this.console, arguments);
+  };
+  ConsoleWrapper.prototype.debug = function() {
+    return this.console.debug.apply(this.console, arguments);
+  };
+  window.console = new ConsoleWrapper(window);
+    
     var req, s, head, baseElement, dataMain, src,
         interactiveScript, currentlyAddingScript, mainScript, subPath,
         version = '2.1.8+',
