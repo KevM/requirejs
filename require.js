@@ -946,6 +946,10 @@ var requirejs, require, define;
                         localRequire = context.makeRequire(map.parentMap, {
                             enableBuildCallback: true
                         });
+                    
+                    if(!plugin) {
+                        console.error('Plugin is falsy (', plugin, ') for module ', name, ' coming from ', parentName);
+                    }
 
                     //If current map is not normalized, wait for that
                     //normalized name to load instead of continuing.
